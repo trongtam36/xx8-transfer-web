@@ -17,7 +17,7 @@ const resultBall = document.getElementById('resultBall');
 // Điều khiển kết quả chỉ dùng khi chạy LOCAL.
 // Bóng trắng 6 sao = thất bại; bóng trắng 5 sao = thành công.
 const isLocalTest = ['localhost', '127.0.0.1', '::1', ''].includes(window.location.hostname);
-let testModeSuccess = localStorage.getItem('xx8_test_success') === '1';
+let testModeSuccess = isLocalTest && localStorage.getItem('xx8_test_success') === '1';
 
 // Tâm biểu tượng ngôi sao trong video gốc 1280x720.
 // JavaScript quy đổi tọa độ này theo object-fit: cover nên quả bóng vẫn
@@ -37,7 +37,7 @@ function updateBallState() {
 }
 
 function positionResultBall() {
-  if (!isLocalTest || !backgroundVideo) return;
+  if (!backgroundVideo) return;
 
   const nativeW = backgroundVideo.videoWidth || 1280;
   const nativeH = backgroundVideo.videoHeight || 720;
@@ -64,12 +64,19 @@ function positionResultBall() {
   resultBall.style.visibility = (x < -margin || x > viewportW + margin || y < -margin || y > viewportH + margin) ? 'hidden' : 'visible';
 }
 
-if (isLocalTest) {
-  resultBall.hidden = false;
-  updateBallState();
-  positionResultBall();
-  backgroundVideo.addEventListener('loadedmetadata', positionResultBall);
-  window.addEventListener('resize', positionResultBall, { passive: true });
+// Quả bóng luôn hiển thị trên cả localhost và GitHub Pages.
+// Trên public nó chỉ là chi tiết giao diện; không dùng để điều khiển kết quả.
+resultBall.hidden = false;
+updateBallState();
+positionResultBall();
+backgroundVideo.addEventListener('loadedmetadata', positionResultBall);
+window.addEventListener('resize', positionResultBall, { passive: true });
+
+if (!isLocalTest) {
+  resultBall.tabIndex = -1;
+  resultBall.setAttribute('aria-hidden', 'true');
+  resultBall.style.pointerEvents = 'none';
+  resultBall.title = '';
 }
 
 resultBall.addEventListener('click', () => {
