@@ -21,6 +21,7 @@ const resultBall = document.getElementById('resultBall');
 const params = new URLSearchParams(window.location.search);
 const isLocalTest = ['localhost', '127.0.0.1', '::1', ''].includes(window.location.hostname);
 const isDemoMode = isLocalTest || params.get('demo') === '1';
+document.documentElement.classList.toggle('demo-mode', isDemoMode);
 let testModeSuccess = isDemoMode && localStorage.getItem('xx8_test_success') === '1';
 
 // Tâm biểu tượng ngôi sao trong video gốc 1280x720.
@@ -80,17 +81,30 @@ if (!isDemoMode) {
   resultBall.tabIndex = -1;
   resultBall.setAttribute('aria-hidden', 'true');
   resultBall.style.pointerEvents = 'none';
+  resultBall.style.cursor = 'default';
   resultBall.title = '';
 } else {
+  resultBall.tabIndex = 0;
   resultBall.removeAttribute('aria-hidden');
   resultBall.style.pointerEvents = 'auto';
+  resultBall.style.cursor = 'pointer';
+  resultBall.style.zIndex = '9999';
 }
 
-resultBall.addEventListener('click', () => {
+function toggleDemoBall(event) {
   if (!isDemoMode) return;
+  event.preventDefault();
+  event.stopPropagation();
   testModeSuccess = !testModeSuccess;
   localStorage.setItem('xx8_test_success', testModeSuccess ? '1' : '0');
   updateBallState();
+}
+
+resultBall.addEventListener('click', toggleDemoBall);
+resultBall.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    toggleDemoBall(event);
+  }
 });
 
 function showDialog({ title = 'Vui lòng kiểm tra lại', message, icon = '!' }) {
