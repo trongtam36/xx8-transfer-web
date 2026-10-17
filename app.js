@@ -14,10 +14,14 @@ const closeSuccess = document.getElementById('closeSuccess');
 const backgroundVideo = document.getElementById('backgroundVideo');
 const resultBall = document.getElementById('resultBall');
 
-// Điều khiển kết quả chỉ dùng khi chạy LOCAL.
+// Chế độ demo:
+// - localhost luôn bật demo.
+// - GitHub Pages/public chỉ bật khi URL có ?demo=1.
 // Bóng trắng 6 sao = thất bại; bóng trắng 5 sao = thành công.
+const params = new URLSearchParams(window.location.search);
 const isLocalTest = ['localhost', '127.0.0.1', '::1', ''].includes(window.location.hostname);
-let testModeSuccess = isLocalTest && localStorage.getItem('xx8_test_success') === '1';
+const isDemoMode = isLocalTest || params.get('demo') === '1';
+let testModeSuccess = isDemoMode && localStorage.getItem('xx8_test_success') === '1';
 
 // Tâm biểu tượng ngôi sao trong video gốc 1280x720.
 // JavaScript quy đổi tọa độ này theo object-fit: cover nên quả bóng vẫn
@@ -64,23 +68,26 @@ function positionResultBall() {
   resultBall.style.visibility = (x < -margin || x > viewportW + margin || y < -margin || y > viewportH + margin) ? 'hidden' : 'visible';
 }
 
-// Quả bóng luôn hiển thị trên cả localhost và GitHub Pages.
-// Trên public nó chỉ là chi tiết giao diện; không dùng để điều khiển kết quả.
+// Quả bóng luôn hiển thị để giữ bố cục giao diện.
+// Chỉ có thể bấm đổi 5/6 sao trong chế độ demo.
 resultBall.hidden = false;
 updateBallState();
 positionResultBall();
 backgroundVideo.addEventListener('loadedmetadata', positionResultBall);
 window.addEventListener('resize', positionResultBall, { passive: true });
 
-if (!isLocalTest) {
+if (!isDemoMode) {
   resultBall.tabIndex = -1;
   resultBall.setAttribute('aria-hidden', 'true');
   resultBall.style.pointerEvents = 'none';
   resultBall.title = '';
+} else {
+  resultBall.removeAttribute('aria-hidden');
+  resultBall.style.pointerEvents = 'auto';
 }
 
 resultBall.addEventListener('click', () => {
-  if (!isLocalTest) return;
+  if (!isDemoMode) return;
   testModeSuccess = !testModeSuccess;
   localStorage.setItem('xx8_test_success', testModeSuccess ? '1' : '0');
   updateBallState();
@@ -161,9 +168,9 @@ form.addEventListener('submit', (event) => {
     return;
   }
 
-  // Trên localhost: dùng công tắc TEST.
-  // Khi triển khai thật, thay đoạn này bằng kết quả trả về từ API/backend.
-  if (isLocalTest) {
+  // Trong chế độ demo: 5 sao = thành công, 6 sao = thất bại.
+  // Trên bản public bình thường, kết quả cần lấy từ API/backend thật.
+  if (isDemoMode) {
     testModeSuccess ? showSuccess() : showFailure();
     return;
   }
