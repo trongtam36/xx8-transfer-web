@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <meta name="xx8-build" content="XX8-VISUAL-MATCH-20261103-B" />
+  <meta name="xx8-build" content="XX8-VERIFY-LABEL-20261103-D" />
   <style>
 :root {
   --card: rgba(255, 255, 255, .96);
@@ -448,7 +448,10 @@ form { display: grid; gap: 14px; }
   .result-ball { min-width: 72px; min-height: 72px; }
 }
 
-/* Build XX8-VISUAL-MATCH-20261103-B */
+/* Build XX8-VERIFY-LABEL-20261103-D */
+.manual-mark { color:#667085; font-size:10px; font-weight:700; letter-spacing:.06em; }
+.non-transaction-note { margin: 2px 4px 0; font-size: 10px; line-height: 1.35; color: #667085; text-align: center; }
+
 /* Nút luôn được click; hộp thoại không che quả bóng như bản ảnh tham chiếu. */
 .result-ball { z-index: 45 !important; pointer-events: auto !important; visibility: visible; cursor: pointer; }
 .result-ball[hidden] { display: none; }
@@ -512,7 +515,7 @@ form { gap: 13px; }
   .transfer-card { transform: translateY(-16px); }
   .dialog { transform: translateY(-13px); }
 }
-/* Build marker: XX8-VISUAL-MATCH-20261103-B */
+/* Build marker: XX8-VERIFY-LABEL-20261103-D */
 </style>
 </head>
 <body>
@@ -564,11 +567,12 @@ form { gap: 13px; }
               <input id="humanCheck" type="checkbox" />
               <span class="fake-checkbox" aria-hidden="true"></span>
             </span>
-            <span class="human-copy">Tôi hiểu đây là bản mô phỏng</span>
-            <span class="cf-mark" aria-hidden="true"><span class="demo-mark">DEMO</span></span>
+            <span class="human-copy">Verify you are human</span>
+            <span class="cf-mark" aria-hidden="true"><span class="manual-mark">CHECKBOX</span></span>
           </label>
 
           <button class="primary-btn" type="submit">CHUYỂN ĐIỂM</button>
+          <p class="non-transaction-note">Giao diện thử nghiệm · không có chuyển điểm thật · ô tích không phải CAPTCHA.</p>
           
         </form>
       </div>
@@ -577,7 +581,7 @@ form { gap: 13px; }
         <div class="success-head">
           <div class="success-badge" aria-hidden="true">✓</div>
           <h1>CHUYỂN THÀNH CÔNG</h1>
-          <p>Ngày chuyển: <span id="successDate">--</span> <span class="inline-demo-tag">· MÔ PHỎNG</span></p>
+          <p>Ngày chuyển: <span id="successDate">--</span> <span class="inline-demo-tag">· THỬ NGHIỆM</span></p>
         </div>
 
         <div class="result-list">
@@ -607,7 +611,7 @@ form { gap: 13px; }
       <div id="dialogIcon" class="dialog-icon" aria-hidden="true">!</div>
       <h2 id="dialogTitle">Vui lòng kiểm tra lại</h2>
       <p id="dialogMessage">Vui lòng nhập đầy đủ tài khoản nguồn, tài khoản đến và số điểm chuyển.</p>
-      <p id="simulationNotice" class="simulation-notice" hidden>MÔ PHỎNG</p>
+      <p id="simulationNotice" class="simulation-notice" hidden>THỬ NGHIỆM</p>
       <button id="dialogConfirm" class="primary-btn" type="button">ĐÃ HIỂU</button>
     </section>
   </div>
@@ -647,7 +651,7 @@ form { gap: 13px; }
 
   <script>
 
-// Build: XX8-VISUAL-MATCH-20261103-B
+// Build: XX8-VERIFY-LABEL-20261103-D
 // Không dùng app.js từ cache / repo; toàn bộ logic của bản mô phỏng nằm trong file này.
 (() => {
   'use strict';
@@ -681,7 +685,7 @@ form { gap: 13px; }
     resultBall.setAttribute('aria-label', testModeSuccess
       ? 'Quả bóng 5 sao, nhấn để đổi sang 6 sao'
       : 'Quả bóng 6 sao, nhấn để đổi sang 5 sao');
-    resultBall.title = testModeSuccess ? '5 sao · Mô phỏng thành công' : '6 sao · Mô phỏng thất bại';
+    resultBall.title = testModeSuccess ? '5 sao · Kết quả thử nghiệm thành công' : '6 sao · Kết quả thử nghiệm thất bại';
   }
 
   // Tọa độ sân vận động video 1280×720, object-fit: cover.
@@ -785,7 +789,7 @@ form { gap: 13px; }
       return;
     }
     if (!humanCheck.checked) {
-      showDialog({ message: 'Vui lòng xác nhận trước khi mô phỏng chuyển điểm.' });
+      showDialog({ message: 'Vui lòng đánh dấu ô xác nhận để tiếp tục.' });
       return;
     }
     if (testModeSuccess) showSuccess(); else showFailure();
@@ -798,7 +802,7 @@ form { gap: 13px; }
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && !dialogBackdrop.hidden) hideDialog();
   });
-  window.__XX8_BUILD__ = 'XX8-VISUAL-MATCH-20261103-B';
+  window.__XX8_BUILD__ = 'XX8-VERIFY-LABEL-20261103-D';
   window.__XX8_DIAGNOSTICS__ = () => ({
     html: document.querySelector('meta[name="xx8-build"]')?.content,
     js: window.__XX8_BUILD__,
