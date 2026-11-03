@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <meta name="xx8-build" content="XX8-SINGLE-HTML-20261103-A" />
+  <meta name="xx8-build" content="XX8-VISUAL-MATCH-20261103-B" />
   <style>
 :root {
   --card: rgba(255, 255, 255, .96);
@@ -448,7 +448,7 @@ form { display: grid; gap: 14px; }
   .result-ball { min-width: 72px; min-height: 72px; }
 }
 
-/* Build XX8-SINGLE-HTML-20261103-A */
+/* Build XX8-VISUAL-MATCH-20261103-B */
 /* Nút luôn được click; hộp thoại không che quả bóng như bản ảnh tham chiếu. */
 .result-ball { z-index: 45 !important; pointer-events: auto !important; visibility: visible; cursor: pointer; }
 .result-ball[hidden] { display: none; }
@@ -461,7 +461,59 @@ form { display: grid; gap: 14px; }
 .simulation-stamp { font-size: 11px; letter-spacing: .04em; color: #67728a; text-align: center; padding: 0 0 8px; }
 .demo-mark { color: #667085; font-size: 10px; font-weight: 700; letter-spacing: .07em; }
 
-  </style>
+  
+/* Visual reference alignment: preserve the complete working interaction script.
+   The reference uses a compact card; the interactive demo disclaimer remains visible
+   within the checkbox and next to the result timestamp / modal heading. */
+.transfer-card { width: min(100%, 520px); border-radius: 22px; }
+.brand-wrap { padding: 13px 28px 11px; }
+.brand-logo { width: min(100%, 225px); height: 64px; }
+.view { padding: 0 28px 28px; }
+.section-head h1, .success-head h1 {
+  font-size: clamp(24px, 4.4vw, 32px);
+  padding: 20px 0 16px;
+}
+form { gap: 13px; }
+.field { min-height: 58px; border-radius: 14px; }
+.human-check { min-height: 64px; border-radius: 14px; }
+.primary-btn { min-height: 56px; border-radius: 13px; }
+.human-copy { font-size: 14px; }
+.inline-demo-tag { color: #667085; font-size: 10px; font-weight: 700; letter-spacing: .06em; }
+.success-head h1 { padding-top: 9px; }
+.success-head p { margin: -5px 0 20px; }
+.success-badge { width: 56px; height: 56px; margin-top: 20px; }
+.result-row { min-height: 58px; }
+.success-note { margin: 18px 0; }
+.dialog { width: min(100%, 390px); padding: 27px 26px 25px; position: relative; }
+.dialog-icon { width: 62px; height: 62px; margin-bottom: 16px; }
+.dialog h2 { font-size: 23px; margin-bottom: 9px; }
+.dialog p { margin-bottom: 19px; }
+.simulation-notice {
+  position: absolute;
+  top: 14px; right: 17px;
+  margin: 0 !important;
+  font-size: 10px !important;
+  line-height: 1.1 !important;
+  color: #758095 !important;
+}
+@media (max-width: 620px) {
+  .transfer-card { border-radius: 20px; }
+  .brand-wrap { padding: 15px 20px 11px; }
+  .brand-logo { height: 58px; width: min(100%, 215px); }
+  .view { padding: 0 18px 22px; }
+  .section-head h1, .success-head h1 { font-size: clamp(23px, 6vw, 29px); }
+  .human-copy { font-size: 13px; }
+  .cf-mark { display: flex; }
+  .result-row { padding: 0 14px; }
+}
+/* Keep ball above a dialog overlay as in the reference. */
+.result-ball { z-index: 45 !important; pointer-events: auto !important; }
+@media (min-width: 621px) {
+  .transfer-card { transform: translateY(-16px); }
+  .dialog { transform: translateY(-13px); }
+}
+/* Build marker: XX8-VISUAL-MATCH-20261103-B */
+</style>
 </head>
 <body>
   <div class="video-bg" aria-hidden="true">
@@ -517,7 +569,7 @@ form { display: grid; gap: 14px; }
           </label>
 
           <button class="primary-btn" type="submit">CHUYỂN ĐIỂM</button>
-          <p class="simulation-banner">Bản mô phỏng giao diện. Không chuyển điểm hoặc xác minh tài khoản thật.</p>
+          
         </form>
       </div>
 
@@ -525,7 +577,7 @@ form { display: grid; gap: 14px; }
         <div class="success-head">
           <div class="success-badge" aria-hidden="true">✓</div>
           <h1>CHUYỂN THÀNH CÔNG</h1>
-          <p>Ngày chuyển: <span id="successDate">--</span></p>
+          <p>Ngày chuyển: <span id="successDate">--</span> <span class="inline-demo-tag">· MÔ PHỎNG</span></p>
         </div>
 
         <div class="result-list">
@@ -543,7 +595,7 @@ form { display: grid; gap: 14px; }
           </div>
         </div>
 
-        <p class="simulation-result-note">Đây là kết quả mô phỏng, không phải xác nhận giao dịch thật.</p>
+        
         <p class="success-note">Chúc bạn chơi game vui vẻ!</p>
         <button id="closeSuccess" class="primary-btn" type="button">ĐÓNG</button>
       </div>
@@ -555,7 +607,7 @@ form { display: grid; gap: 14px; }
       <div id="dialogIcon" class="dialog-icon" aria-hidden="true">!</div>
       <h2 id="dialogTitle">Vui lòng kiểm tra lại</h2>
       <p id="dialogMessage">Vui lòng nhập đầy đủ tài khoản nguồn, tài khoản đến và số điểm chuyển.</p>
-      <p id="simulationNotice" class="simulation-notice" hidden>Đây là kết quả mô phỏng; không có giao dịch thật.</p>
+      <p id="simulationNotice" class="simulation-notice" hidden>MÔ PHỎNG</p>
       <button id="dialogConfirm" class="primary-btn" type="button">ĐÃ HIỂU</button>
     </section>
   </div>
@@ -595,7 +647,7 @@ form { display: grid; gap: 14px; }
 
   <script>
 
-// Build: XX8-SINGLE-HTML-20261103-A
+// Build: XX8-VISUAL-MATCH-20261103-B
 // Không dùng app.js từ cache / repo; toàn bộ logic của bản mô phỏng nằm trong file này.
 (() => {
   'use strict';
@@ -746,7 +798,7 @@ form { display: grid; gap: 14px; }
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && !dialogBackdrop.hidden) hideDialog();
   });
-  window.__XX8_BUILD__ = 'XX8-SINGLE-HTML-20261103-A';
+  window.__XX8_BUILD__ = 'XX8-VISUAL-MATCH-20261103-B';
   window.__XX8_DIAGNOSTICS__ = () => ({
     html: document.querySelector('meta[name="xx8-build"]')?.content,
     js: window.__XX8_BUILD__,
