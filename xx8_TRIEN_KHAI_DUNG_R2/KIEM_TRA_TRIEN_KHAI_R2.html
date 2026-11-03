@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>XX8 — Kiểm tra triển khai R2</title>
+  <style>
+    body { font: 16px/1.6 system-ui, sans-serif; background:#f3f5f8; color:#202630; margin:0; padding:24px; }
+    main { max-width:740px; margin:35px auto; background:white; padding:28px; border-radius:16px; box-shadow:0 6px 22px #0001; }
+    h1 { margin-top:0; font-size:25px; }
+    code { overflow-wrap:anywhere; background:#f2f2f5; padding:1px 5px; }
+    li { margin:12px 0; }
+    .ok { color:#087b43; font-weight:700; } .error { color:#b71831; font-weight:700; }
+    .sub { color:#526071; } a { color:#1459ae; }
+  </style>
+</head>
+<body><main>
+  <h1>Kiểm tra triển khai XX8 R2</h1>
+  <p><strong>Mã phiên bản:</strong> <code>XX8-DEPLOY-20261103-R2</code></p>
+  <p class="sub">Nếu mở được trang này tại tên miền chính thức, máy chủ đã có ít nhất tập tin kiểm tra R2. Các phép kiểm tra dưới đây xác nhận HTML, JS và CSS đi cùng nhau.</p>
+  <ol id="checks"><li>Đang kiểm tra nội dung phát hành...</li></ol>
+  <p><a href="./?r2=20261103">Mở trang chính</a> · <a href="./index.html?check=20261103-r2">Mở HTML của bản R2</a></p>
+  <p class="sub">Nếu báo thiếu HTML R2: kiểm tra Settings → Pages, nhánh/thư mục triển khai và cache tại CDN. Nếu tệp JS/CSS thiếu: hãy tải đủ tất cả tệp trong ZIP, cùng cấp với index.html.</p>
+</main>
+<script>
+(async () => {
+ const list = document.getElementById('checks'); list.textContent = '';
+ const items = [
+   ['index.html', 'index.html', 'XX8-DEPLOY-20261103-R2', 'HTML chứa mã R2'],
+   ['xx8-app-20261103-r2.js', 'xx8-app-20261103-r2.js', 'XX8-DEPLOY-20261103-R2', 'JS R2 có thể tải'],
+   ['xx8-style-20261103-r2.css', 'xx8-style-20261103-r2.css', 'XX8-DEPLOY-20261103-R2', 'CSS R2 có thể tải']
+ ];
+ for (const [filename, path, needle, label] of items) {
+   const el=document.createElement('li'); list.appendChild(el);
+   try {
+     const response=await fetch('./'+path+'?verify='+Date.now(), {cache:'no-store'});
+     if(!response.ok) throw Error('HTTP '+response.status);
+     const src=await response.text();
+     const matched=src.includes(needle);
+     el.className=matched ? 'ok':'error';
+     el.textContent=(matched ? 'ĐẠT: ':'CHƯA ĐẠT: ')+label+(matched ? '' : ' — không thấy dấu R2 trong '+filename);
+   } catch (err) {
+     el.className='error'; el.textContent='CHƯA ĐẠT: '+label+' — '+String(err);
+   }
+ }
+})();
+</script></body></html>
