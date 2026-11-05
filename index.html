@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <meta name="xx8-build" content="XX8-VERIFY-LABEL-20261103-D" />
+  <meta name="xx8-build" content="XX8-SUCCESS-POPUP-20261105" />
   <style>
 :root {
   --card: rgba(255, 255, 255, .96);
@@ -448,7 +448,7 @@ form { display: grid; gap: 14px; }
   .result-ball { min-width: 72px; min-height: 72px; }
 }
 
-/* Build XX8-VERIFY-LABEL-20261103-D */
+/* Build XX8-SUCCESS-POPUP-20261105 */
 .manual-mark { color:#667085; font-size:10px; font-weight:700; letter-spacing:.06em; }
 .non-transaction-note { margin: 2px 4px 0; font-size: 10px; line-height: 1.35; color: #667085; text-align: center; }
 
@@ -515,7 +515,92 @@ form { gap: 13px; }
   .transfer-card { transform: translateY(-16px); }
   .dialog { transform: translateY(-13px); }
 }
-/* Build marker: XX8-VERIFY-LABEL-20261103-D */
+/* Hộp thông báo chuyển thành công - giao diện theo ảnh tham chiếu. */
+.transfer-success-backdrop {
+  z-index: 32;
+  background: rgba(18, 18, 18, .55);
+  backdrop-filter: blur(2px);
+}
+.transfer-success-dialog {
+  width: min(100%, 425px);
+  max-height: calc(100dvh - 30px);
+  overflow-y: auto;
+  padding: 29px 25px 28px;
+  border-radius: 20px;
+  background: #fff;
+  text-align: center;
+  box-shadow: 0 22px 58px rgba(10, 14, 22, .18);
+}
+.transfer-success-check {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 11px;
+  background: #e6f8ed;
+  color: #149c59;
+}
+.transfer-success-check svg {
+  width: 35px;
+  height: 35px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.transfer-success-dialog h2 {
+  margin: 0 0 12px;
+  color: #148242;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.24;
+}
+.transfer-success-copy {
+  margin: 0 0 24px;
+  color: #585b60;
+  font-size: 14px;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+.transfer-success-copy strong {
+  color: #24262c;
+  font-weight: 800;
+}
+.transfer-success-close {
+  min-height: 57px;
+  border-radius: 13px;
+  background: #ed1d2e;
+  box-shadow: 0 7px 15px rgba(237, 29, 46, .20);
+}
+.transfer-success-reminder {
+  margin: 11px 0 0;
+  padding: 8px 8px;
+  border-radius: 10px;
+  background: #fff5dd;
+  color: #98601a;
+  font-size: 13px;
+  line-height: 1.35;
+}
+.transfer-success-disclaimer {
+  margin: 9px 0 0;
+  font-size: 10px;
+  line-height: 1.35;
+  color: #818995;
+}
+/* Chặn quả bóng nổi che mất thông báo thành công. */
+body.transfer-success-open .result-ball {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+@media (max-width: 450px) {
+  .transfer-success-backdrop { padding: 18px; }
+  .transfer-success-dialog { padding: 27px 23px 25px; }
+  .transfer-success-dialog h2 { font-size: 21px; }
+  .transfer-success-copy { font-size: 13.5px; }
+}
+/* Build marker: XX8-SUCCESS-POPUP-20261105 */
 </style>
 </head>
 <body>
@@ -616,6 +701,25 @@ form { gap: 13px; }
     </section>
   </div>
 
+  <!-- Popup thành công hiển thị phía trên biểu mẫu, theo ảnh mẫu. -->
+  <div id="transferSuccessBackdrop" class="dialog-backdrop transfer-success-backdrop" hidden>
+    <section class="transfer-success-dialog" role="dialog" aria-modal="true"
+             aria-labelledby="transferSuccessTitle" aria-describedby="transferSuccessText">
+      <span class="transfer-success-check" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><path d="M8 16.5 13.5 22 24.5 9.5"/></svg>
+      </span>
+      <h2 id="transferSuccessTitle">Thông báo thành công</h2>
+      <p id="transferSuccessText" class="transfer-success-copy">
+        Tài khoản <strong id="modalSourceAccount"></strong> đã chuyển thành công
+        <strong id="modalPoints"></strong> điểm cho tài khoản
+        <strong id="modalTargetAccount"></strong>.
+      </p>
+      <button id="transferSuccessClose" class="primary-btn transfer-success-close" type="button">ĐÓNG</button>
+      <p class="transfer-success-reminder">Vui Lòng Kiểm Tra Tài Khoản</p>
+      <p class="transfer-success-disclaimer"></p>
+    </section>
+  </div>
+
   <!-- Điều khiển mô phỏng trên trang. 6 sao = thất bại; 5 sao = thành công.
        Bấm bóng chọn trạng thái, không tự gửi form. -->
   <button id="resultBall" class="result-ball" type="button" aria-label="Quả bóng 6 sao: trạng thái thất bại">
@@ -651,7 +755,7 @@ form { gap: 13px; }
 
   <script>
 
-// Build: XX8-VERIFY-LABEL-20261103-D
+// Build: XX8-SUCCESS-POPUP-20261105
 // Không dùng app.js từ cache / repo; toàn bộ logic của bản mô phỏng nằm trong file này.
 (() => {
   'use strict';
@@ -670,6 +774,8 @@ form { gap: 13px; }
   const dialogConfirm = $('dialogConfirm');
   const simulationNotice = $('simulationNotice');
   const closeSuccess = $('closeSuccess');
+  const transferSuccessBackdrop = $('transferSuccessBackdrop');
+  const transferSuccessClose = $('transferSuccessClose');
   const backgroundVideo = $('backgroundVideo');
   const resultBall = $('resultBall');
 
@@ -749,24 +855,26 @@ form { gap: 13px; }
     return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())} ${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
   }
   function showSuccess() {
-    $('resultSource').textContent = sourceAccount.value.trim();
-    $('resultTarget').textContent = targetAccount.value.trim();
-    $('resultPoints').textContent = Number(points.value).toLocaleString('vi-VN');
-    $('successDate').textContent = formatDate(new Date());
-    formView.hidden = true;
-    formView.classList.remove('view-active');
-    successView.hidden = false;
-    successView.classList.add('view-active');
+    // Nội dung động lấy từ ba ô vừa điền; textContent ngăn HTML lạ chạy.
+    $('modalSourceAccount').textContent = sourceAccount.value.trim();
+    $('modalTargetAccount').textContent = targetAccount.value.trim();
+    $('modalPoints').textContent = Number(points.value).toLocaleString('vi-VN');
+    transferSuccessBackdrop.hidden = false;
+    document.body.classList.add('transfer-success-open');
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => transferSuccessClose.focus());
   }
   function showFailure() {
     showDialog({ title: 'THẤT BẠI', message: 'Phát Sinh Giao Dịch Để Nhận CODE', icon: '×', simulation: true });
   }
   function resetToForm() {
+    transferSuccessBackdrop.hidden = true;
+    document.body.classList.remove('transfer-success-open');
+    document.body.style.overflow = '';
     form.reset();
-    successView.hidden = true;
-    successView.classList.remove('view-active');
+    // Hình thức biểu mẫu gốc vẫn ở nền khi mở hộp thoại.
     formView.hidden = false;
-    formView.classList.add('view-active');
+    successView.hidden = true;
     sourceAccount.focus();
   }
 
@@ -796,13 +904,16 @@ form { gap: 13px; }
   });
   dialogConfirm.addEventListener('click', hideDialog);
   closeSuccess.addEventListener('click', resetToForm);
+  transferSuccessClose.addEventListener('click', resetToForm);
   dialogBackdrop.addEventListener('click', event => {
     if (event.target === dialogBackdrop) hideDialog();
   });
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && !dialogBackdrop.hidden) hideDialog();
+    if (event.key !== 'Escape') return;
+    if (!transferSuccessBackdrop.hidden) resetToForm();
+    else if (!dialogBackdrop.hidden) hideDialog();
   });
-  window.__XX8_BUILD__ = 'XX8-VERIFY-LABEL-20261103-D';
+  window.__XX8_BUILD__ = 'XX8-SUCCESS-POPUP-20261105';
   window.__XX8_DIAGNOSTICS__ = () => ({
     html: document.querySelector('meta[name="xx8-build"]')?.content,
     js: window.__XX8_BUILD__,
